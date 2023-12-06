@@ -1,5 +1,7 @@
 package com.ll.library.base.initData;
 
+import com.ll.library.boundedContext.member.entity.Member;
+import com.ll.library.boundedContext.member.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
