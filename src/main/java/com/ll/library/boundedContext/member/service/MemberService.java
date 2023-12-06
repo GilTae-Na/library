@@ -1,6 +1,8 @@
 package com.ll.library.boundedContext.member.service;
 
 import com.ll.library.base.jwt.JwtProvider;
+import com.ll.library.base.rsData.RsData;
+import com.ll.library.boundedContext.member.controller.ApiV1MemberController;
 import com.ll.library.boundedContext.member.entity.Member;
 import com.ll.library.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +19,20 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public Member join(String username, String password, String email) {
+    public RsData<Member> join(String username, String password, String email) {
         Member member = Member.builder()
                 .username(username)
                 .password(password)
                 .email(email)
                 .build();
 
-        memberRepository.save(member);
+        Member rsMember = memberRepository.save(member);
 
-        return member;
+        return RsData.of(
+                "S-1",
+                "성공",
+                rsMember
+        );
     }
 
     public Optional<Member> findByUsername(String username) {

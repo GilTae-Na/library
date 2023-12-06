@@ -16,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -75,5 +76,49 @@ class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.data.member.id").exists())
                 .andExpect(jsonPath("$.data.member.username").value("user1"));
+    }
+
+    @Test
+    @DisplayName("Get /member/join는 회원가입 URL이다.")
+    void t3() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/v1/member/join")
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").exists());
+    }
+
+    @Test
+    @DisplayName("회원가입 하기")
+    void MemberJoinTest() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/member/join")
+                        .content("""
+                                        {
+                                            "username": "test001",
+                                            "password": "1234",
+                                            "email": "test001@test.com"
+                                        }
+                                        """.stripIndent())
+                        .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.member").exists());
+
     }
 }

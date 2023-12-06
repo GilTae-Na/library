@@ -1,5 +1,6 @@
 package com.ll.library.boundedContext.member.controller;
 
+import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
 import com.ll.library.boundedContext.member.entity.Member;
 import com.ll.library.boundedContext.member.service.MemberService;
@@ -25,7 +26,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "api/v1/member", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1MemberController", description = "로그인, 로그인 된 회원의 정보")
 public class ApiV1MemberController {
+
     private final MemberService memberService;
+    private final Rq rq;
 
     @Data
     public static class LoginRequest {
@@ -52,6 +55,51 @@ public class ApiV1MemberController {
                 new LoginResponse(accessToken)
         );
     }
+
+    @GetMapping(value ="/join", consumes = ALL_VALUE)
+    public RsData showJoin() {
+
+        return RsData.of(
+                "S-1",
+                "로그인 폼 입니다."
+        );
+    }
+
+    @Data
+    public static class JoinRequest {
+        @NotBlank
+        private String username;
+        @NotBlank
+        private String password;
+        @NotBlank
+        private String email;
+
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class JoinResponse {
+        private final Member member;
+    }
+
+    @PostMapping("/join")
+    public RsData<JoinResponse> join(@Valid @RequestBody JoinRequest joinRequest) {
+        RsData<Member> joinRs = memberService.join(joinRequest.getUsername(), joinRequest.getPassword(), joinRequest.getEmail());
+
+        if (joinRs.isFail()) {
+            return RsData.of("F-1", "회원가입 실패");
+        }
+
+        return RsData.of(
+                "S-1",
+                "회원가입 완료.",
+                new JoinResponse(joinRs.getData())
+        );
+    }
+
+
+
+
 
     @AllArgsConstructor
     @Getter
