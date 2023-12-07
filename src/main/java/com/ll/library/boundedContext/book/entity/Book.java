@@ -2,10 +2,9 @@ package com.ll.library.boundedContext.book.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.library.base.entity.BaseEntity;
+import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
 import com.ll.library.boundedContext.member.entity.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -31,6 +30,9 @@ public class Book extends BaseEntity {
 
     @ManyToOne //여러개의 책이 한 명의 사용자에게 등록될 수 있으므로
     private Member regMember; //등록한 멤버
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL) //온라인 상에서 안 도서를 여러사람이 대출훌 수 있다.(book 1 : n  member)
+    private List<CheckoutHistory> checkoutHistories = new ArrayList<>();
 
 
 }

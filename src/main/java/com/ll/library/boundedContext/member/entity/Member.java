@@ -2,8 +2,11 @@ package com.ll.library.boundedContext.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.library.base.entity.BaseEntity;
+import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +33,11 @@ public class Member extends BaseEntity {
     private String password;
 
     private String email;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<CheckoutHistory> checkoutHistories = new ArrayList<>();
+
+
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
