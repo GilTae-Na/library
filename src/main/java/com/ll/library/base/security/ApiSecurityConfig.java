@@ -35,7 +35,8 @@ public class ApiSecurityConfig {
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers("/api/*/member/login").permitAll()
                                 .requestMatchers("/api/*/member/join").permitAll()
-                                .requestMatchers("/api/*/book/checkout-history").permitAll()
+                                .requestMatchers("/api/*/book/*").permitAll()
+                                .requestMatchers("/api/*/checkout/*").permitAll()
                                 //로그인은 누구나 가능
                                 .anyRequest().authenticated()
                         //나머지는 인증된 사용자만

@@ -4,6 +4,7 @@ import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.service.BookService;
+import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
 import com.ll.library.boundedContext.member.entity.Member;
 import com.ll.library.boundedContext.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "api/v1/book", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1BookController", description = "로그인, 로그인 된 회원의 정보")
-
 public class BookController {
 
     @Autowired
@@ -57,18 +57,18 @@ public class BookController {
     public RsData create(@Valid @RequestBody RegisterRequest registerRequest) {
         Member member = rq.getMember();
 
-        RsData<Book> bookRs =  bookService.create(
+        RsData<Book> rsBook =  bookService.create(
                 registerRequest.getTitle(),
                 registerRequest.getAuthor(),
                 registerRequest.getIntroduce(),
                 member);
 
-        if(bookRs.isFail()) return (RsData)bookRs;
+        if(rsBook.isFail()) return (RsData)rsBook;
 
         return RsData.of(
-                bookRs.getResultCode(),
-                bookRs.getMsg(),
-                new RegisterResponse(bookRs.getData())
+                rsBook.getResultCode(),
+                rsBook.getMsg(),
+                new RegisterResponse(rsBook.getData())
         );
     }
 
@@ -120,35 +120,6 @@ public class BookController {
                 new ModifyResponse(modifyRs.getData())
         );
 
-    }
-//-----------------------대출확인--------------
-    @Data
-    public static class CheckoutRequest {
-        @NotBlank
-        private String title; //제목
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class CheckoutResponse {
-        private final Book book;
-    }
-
-    @PostMapping(value = "/checkout-history", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "대출이력을 확인, 로그인 안해도 확인 가능")
-    public RsData confirmCheckout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
-        RsData<Book> bookRs = bookService.getCheckoutHistoryForMember(checkoutRequest.getTitle());
-
-        if(bookRs.isFail()){
-            return RsData.of(bookRs.getResultCode(), bookRs.getMsg(), bookRs.getData());
-        }
-
-        int count =  bookRs.getData().getCheckoutHistories().size();
-
-        return RsData.of(
-                "S-1",
-                "%d 명의 사용자가 책을 대출중 입니다.".formatted(count),
-                new CheckoutResponse(bookRs.getData()));
     }
 
 

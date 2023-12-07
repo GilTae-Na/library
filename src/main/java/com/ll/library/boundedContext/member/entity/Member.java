@@ -34,11 +34,6 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL) //한 사람이 여러개의 책을 빌릴수 있다
-    private List<CheckoutHistory> checkoutHistories = new ArrayList<>();
-
-
-
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

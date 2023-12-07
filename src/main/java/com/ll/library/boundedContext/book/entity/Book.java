@@ -28,11 +28,8 @@ public class Book extends BaseEntity {
 
     private String introduce; //책 설명
 
-    @ManyToOne //여러개의 책이 한 명의 사용자에게 등록될 수 있으므로
+    @ManyToOne(fetch = FetchType.LAZY) //여러개의 책이 한 명의 사용자에게 등록될 수 있으므로
     private Member regMember; //등록한 멤버
-
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL) //온라인 상에서 안 도서를 여러사람이 대출훌 수 있다.(book 1 : n  member)
-    private List<CheckoutHistory> checkoutHistories = new ArrayList<>();
 
 
 }

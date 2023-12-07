@@ -1,6 +1,7 @@
 package com.ll.library.boundedContext.book.service;
 
 import com.ll.library.base.rsData.RsData;
+import com.ll.library.boundedContext.book.controller.BookController;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.repository.BookRepository;
 import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
@@ -21,10 +22,7 @@ public class BookService {
 
     @Autowired
     private final BookRepository bookRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private CheckoutHistoryRepository checkoutHistoryRepository;
+
 
     public Optional<Book> findById(Long id){
         return bookRepository.findById(id);
@@ -71,22 +69,6 @@ public class BookService {
                 "게시물을 수정할 수 없습니다."
         );
     }
-//--------------------------------------------------
-
-    //대출조회
-    public RsData<Book> getCheckoutHistoryForMember(String title){
-        Optional<Book> book = bookRepository.findByTitle(title);
-
-        return book.map(value -> RsData.of("S-1",
-                "%s 제목의 책이 있습니다.".formatted(title),
-                book.get())).orElseGet(() -> RsData.of("F-1",
-                "%s 제목의 책이 없습니다.".formatted(title),
-                null));
-
-    }
-
-
-
 
 
 
