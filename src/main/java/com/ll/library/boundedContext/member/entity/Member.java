@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL) //한 사람이 여러개의 책을 빌릴수 있다
     private List<CheckoutHistory> checkoutHistories = new ArrayList<>();
 
 

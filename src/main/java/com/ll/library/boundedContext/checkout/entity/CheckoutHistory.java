@@ -6,6 +6,7 @@ import com.ll.library.boundedContext.member.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @ToString(callSuper = true)
 public class CheckoutHistory extends BaseEntity {
 

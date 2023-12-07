@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -27,9 +28,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "ApiV1BookController", description = "로그인, 로그인 된 회원의 정보")
 
 public class BookController {
+
+    @Autowired
     private final BookService bookService;
     private final Rq rq;
 
+
+    //-------------------------------등록----------
 
     @Data
     public static class RegisterRequest {
@@ -68,7 +73,7 @@ public class BookController {
     }
 
 
-
+//-------------------------------수정----------
 
     @Data
     public static class ModifyRequest {
@@ -116,8 +121,35 @@ public class BookController {
         );
 
     }
+//-----------------------대출확인--------------
+    @Data
+    public static class CheckoutRequest {
+        @NotBlank
+        private String title; //제목
+    }
 
+    @AllArgsConstructor
+    @Getter
+    public static class CheckoutResponse {
+        private final Book book;
+    }
 
+    @PostMapping(value = "/checkout-history", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "대출이력을 확인, 로그인 안해도 확인 가능")
+    public RsData confirmCheckout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
+        RsData<Book> bookRs = bookService.getCheckoutHistoryForMember(checkoutRequest.getTitle());
+
+        if(bookRs.isFail()){
+            return RsData.of(bookRs.getResultCode(), bookRs.getMsg(), bookRs.getData());
+        }
+
+        int count =  bookRs.getData().getCheckoutHistories().size();
+
+        return RsData.of(
+                "S-1",
+                "%d 명의 사용자가 책을 대출중 입니다.".formatted(count),
+                new CheckoutResponse(bookRs.getData()));
+    }
 
 
 }
