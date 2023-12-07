@@ -17,6 +17,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
@@ -63,6 +65,56 @@ public class BookController {
                 bookRs.getMsg(),
                 new RegisterResponse(bookRs.getData())
         );
+    }
+
+
+
+
+    @Data
+    public static class ModifyRequest {
+        @NotBlank
+        private String title; //제목
+        @NotBlank
+        private String author;//저자
+        @NotBlank
+        private String introduce; //책 설명
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ModifyResponse {
+        private final Book book;
+    }
+
+
+    @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "수정", security = @SecurityRequirement(name = "bearerAuth"))
+    public RsData<ModifyResponse> modify(
+            @Valid @RequestBody ModifyRequest modifyRequest,
+            @PathVariable Long id
+    ) {
+        Member member = rq.getMember();
+
+        Optional<Book> opBook =  bookService.findById(id);
+
+        if(opBook.isEmpty()) return RsData.of(
+                "F-1",
+                "책이 존재하지 않습니다.",
+                null
+        );
+
+        RsData canModifyRs =  bookService.canModify(member, opBook.get());
+
+        if (canModifyRs.isFail()) return canModifyRs;
+
+        RsData<Book> modifyRs = bookService.modify(opBook.get(), modifyRequest.getTitle(), modifyRequest.getAuthor(), modifyRequest.getIntroduce());
+
+        return RsData.of(
+                modifyRs.getResultCode(),
+                modifyRs.getMsg(),
+                new ModifyResponse(modifyRs.getData())
+        );
+
     }
 
 

@@ -25,7 +25,6 @@ public class MemberService {
                 .password(password)
                 .email(email)
                 .build();
-
         Member rsMember = memberRepository.save(member);
 
         return RsData.of(
