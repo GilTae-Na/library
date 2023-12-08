@@ -78,4 +78,28 @@ class CheckoutHistoryControllerTest {
                 .andExpect(jsonPath("$.data").exists());
     }
 
+    @Test
+    @DisplayName("POST /book/return , 반납하기")
+    @WithUserDetails("user1")
+    void t7() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/checkout/return")
+                                .content("""
+                                        {
+                                            "title": "제목 2"
+                                        }
+                                        """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").exists());
+    }
+
 }

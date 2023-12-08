@@ -33,7 +33,7 @@ public class CheckoutHistoryController {
 
 
     //-----------------------대출확인--------------
-    @Data
+    @Data //리퀘스트, 리스폰 위치 정리
     public static class CheckoutRequest {
         @NotBlank
         private String title; //제목
@@ -48,7 +48,7 @@ public class CheckoutHistoryController {
     @PostMapping(value = "/checkout-history", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "대출이력을 확인, 로그인 안해도 확인 가능")
     public RsData confirmCheckout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
-        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title);
+        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title); //서비스로 로직 이전하기
         if(book.isEmpty()){
             return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
         }
@@ -70,12 +70,27 @@ public class CheckoutHistoryController {
 
         RsData<Book> rsBook = checkoutHistoryService.addCheckoutHistory(book.get(), member);
 
-        //if(rsBook.isFail()) return (RsData)rsBook;
-
         return RsData.of(
                 rsBook.getResultCode(),
                 rsBook.getMsg(),
                 new CheckoutResponse(rsBook.getData()) //대출했으니 책 데이터를 준다.
         );
+    }
+
+    //대출하기
+    @PostMapping(value = "/return", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "반납", security = @SecurityRequirement(name = "bearerAuth"))
+    public RsData return_book(@Valid @RequestBody CheckoutRequest checkoutRequest) {
+        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title);
+
+        if(book.isEmpty()){
+            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
+        }
+
+        RsData rsBook =  checkoutHistoryService.updateReturnDate(book.get());
+
+        return RsData.of(
+                rsBook.getResultCode(),
+                rsBook.getMsg());
     }
 }

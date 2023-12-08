@@ -20,38 +20,6 @@ public class CheckoutHistoryService {
     private  final BookRepository bookRepository;
 
 
-    /*public RsData<Book> checkoutBook(Member member, String title) { //대출하기
-        Optional<Book> book = bookRepository.findByTitle(title);
-
-        if(book.isEmpty()){
-            return RsData.of("F-1", "%s 책이 없습니다.".formatted(title), null);
-        }
-
-        CheckoutHistory checkoutHistory = CheckoutHistory
-                .builder()
-                .member(member)
-                .book(book.get())
-                .checkoutDate(LocalDateTime.now())
-                .build();
-
-
-        member.getCheckoutHistories().add(checkoutHistory); //이 멤버가 대출해갔음
-        book.get().getCheckoutHistories().add(checkoutHistory);   //이 책은 대출된거임
-
-        checkoutHistoryRepository.save(checkoutHistory);
-
-        return RsData.of("S-1",
-                "%s 도서가 대출되었습니다.".formatted(book.get().getTitle()),
-                book.get());
-    }*/
-
-    //-----------------------------------------------------------------------------------------------------
-    /*// 특정 회원이 대출한 책 목록 조회
-    public List<CheckoutHistory> getCheckoutHistoryForMember(Member member) {
-        return checkoutHistoryRepository.findByMemberOrderByCheckoutDateDesc(member);
-    }*/
-
-
     public RsData CheckoutHistory(Book book) {
         Optional<CheckoutHistory> checkoutHistory = checkoutHistoryRepository.findByBook_Title(book.getTitle());
 
@@ -69,7 +37,7 @@ public class CheckoutHistoryService {
     }
 
 
-    // 책 대출 하기 추가
+    // 책 대출 하기
     public RsData<Book> addCheckoutHistory(Book book, Member member) {
 
         CheckoutHistory checkoutHistory = CheckoutHistory
@@ -84,10 +52,15 @@ public class CheckoutHistoryService {
     }
 
     // 책 반납 기록 갱신
-    public void updateReturnDate(CheckoutHistory checkoutHistory) {
-        checkoutHistory.setReturnDate(LocalDateTime.now());
-        checkoutHistoryRepository.save(checkoutHistory);
-    }
+    public RsData updateReturnDate(Book book) {
+        Optional<CheckoutHistory> checkoutHistory = checkoutHistoryRepository.findByBook_Title(book.getTitle());
 
+        if(checkoutHistory.isEmpty()){
+            return RsData.of("F-1", "%s 책은 대출기록이 없습니다. 다시 확인해주세요.".formatted(book.getTitle()), null);
+        }
+        checkoutHistory.get().setReturnDate(LocalDateTime.now());
+        checkoutHistoryRepository.save(checkoutHistory.get());
+        return RsData.of("S-1", "%s 책을 반납했습니다.".formatted(book.getTitle()), null);
+    }
 
 }
