@@ -39,7 +39,7 @@ class CheckoutHistoryControllerTest {
                         post("/api/v1/checkout/checkout-history")
                                 .content("""
                                         {
-                                            "title": "제목 2"
+                                            "title": "제목 3"
                                         }
                                         """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))

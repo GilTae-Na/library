@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

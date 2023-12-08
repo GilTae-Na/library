@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -29,4 +28,8 @@ public class CheckoutHistory extends BaseEntity {
     private LocalDateTime checkoutDate;
 
     private LocalDateTime returnDate;
+
+    public void setReturnDate(LocalDateTime time){
+        this.returnDate = time;
+    }
 }

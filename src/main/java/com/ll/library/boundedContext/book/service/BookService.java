@@ -43,9 +43,7 @@ public class BookService {
 
     public RsData<Book> modify(Book book, String title, String author, String introduce) {
 
-        if (title != null) book.setTitle(title);
-        if (author != null) book.setAuthor(author);
-        if (introduce != null) book.setIntroduce(introduce);
+        book.bookModify(title, author, introduce);
 
         bookRepository.save(book);
 
