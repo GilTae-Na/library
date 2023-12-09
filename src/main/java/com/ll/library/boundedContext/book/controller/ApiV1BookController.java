@@ -34,7 +34,7 @@ public class ApiV1BookController {
     //-------------------------------등록----------
 
     @PostMapping(value = "", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "등록", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "도서 등록", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData create(@Valid @RequestBody BookRequest registerRequest) {
         Member member = rq.getMember();
 
@@ -58,7 +58,7 @@ public class ApiV1BookController {
 
 
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "수정", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "도서 수정", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData<BookResponse> modify(
             @Valid @RequestBody BookModifyRequest modifyRequest,
             @PathVariable Long id

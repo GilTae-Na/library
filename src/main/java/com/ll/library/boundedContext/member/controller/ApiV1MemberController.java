@@ -52,6 +52,7 @@ public class ApiV1MemberController {
     }
 
     @GetMapping(value ="/join", consumes = ALL_VALUE)
+    @Operation(summary = "회원가입 폼")
     public RsData showJoin() {
 
         return RsData.of(
@@ -63,6 +64,7 @@ public class ApiV1MemberController {
 
 
     @PostMapping("/join")
+    @Operation(summary = "회원가입 요청하기")
     public RsData<MemberResponse> join(@Valid @RequestBody JoinRequest joinRequest) {
         RsData<Member> joinRs = memberService.join(joinRequest.getUsername(), joinRequest.getPassword(), joinRequest.getEmail());
 
