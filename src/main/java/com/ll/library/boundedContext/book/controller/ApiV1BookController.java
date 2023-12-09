@@ -2,6 +2,7 @@ package com.ll.library.boundedContext.book.controller;
 
 import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
+import com.ll.library.boundedContext.book.dto.BookModifyRequest;
 import com.ll.library.boundedContext.book.dto.BookRequest;
 import com.ll.library.boundedContext.book.dto.BookResponse;
 import com.ll.library.boundedContext.book.entity.Book;
@@ -67,7 +68,7 @@ public class ApiV1BookController {
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "수정", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData<BookResponse> modify(
-            @Valid @RequestBody BookRequest modifyRequest,
+            @Valid @RequestBody BookModifyRequest modifyRequest,
             @PathVariable Long id
     ) {
         Member member = rq.getMember();

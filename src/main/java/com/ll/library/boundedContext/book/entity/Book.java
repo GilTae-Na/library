@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -30,10 +31,5 @@ public class Book extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY) //여러개의 책이 한 명의 사용자에게 등록될 수 있으므로
     private Member regMember; //등록한 멤버
 
-    public void bookModify(String inputTitle, String inputAuthor, String InputIntroduce){
-        if (title != null) this.title = inputTitle;
-        if (author != null) this.author = inputAuthor;
-        if (introduce != null) this.introduce = InputIntroduce;
-    }
 
 }

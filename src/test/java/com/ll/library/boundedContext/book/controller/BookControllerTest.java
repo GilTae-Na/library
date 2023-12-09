@@ -91,6 +91,32 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.data.book.introduce").value("설명 수정1"));
     }
 
+    @Test
+    @DisplayName("PATCH /book/id partly")
+    @WithUserDetails("user1")
+    void t5() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/api/v1/book/1")
+                                .content("""
+                                        {
+                                            "title": "제목 수정1"
+                                        }
+                                        """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.book.title").value("제목 수정1"))
+                .andExpect(jsonPath("$.data.book.author").value("작가 1"));
+    }
+
 
 
 }
