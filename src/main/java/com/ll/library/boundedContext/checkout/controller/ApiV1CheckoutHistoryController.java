@@ -67,6 +67,10 @@ public class ApiV1CheckoutHistoryController {
             return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
         }
 
+        if(checkoutHistoryService.CheckoutHistory(book.get()).isFail()){
+            return RsData.of("F-1", "대출이 불가능합니다.");
+        }
+
         RsData<Book> rsBook = checkoutHistoryService.addCheckoutHistory(book.get(), member);
 
         return RsData.of(

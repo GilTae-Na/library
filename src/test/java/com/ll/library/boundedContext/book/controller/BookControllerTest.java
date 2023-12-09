@@ -35,7 +35,7 @@ class BookControllerTest {
     private MockMvc mvc;
 
     @Test
-    @DisplayName("POST /articles/1, 책등록")
+    @DisplayName("POST /book/1, 책등록")
     @WithUserDetails("user1")
     void t3() throws Exception {
         // When
