@@ -35,7 +35,9 @@ public class MemberService {
     }
 
     public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
+        return  memberRepository.findByUsername(username);
+
+
     }
 
     public String genAccessToken(String username, String password) {
@@ -53,4 +55,5 @@ public class MemberService {
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
+
 }

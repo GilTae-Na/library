@@ -2,7 +2,6 @@ package com.ll.library.boundedContext.checkout.controller;
 
 import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
-import com.ll.library.boundedContext.book.controller.BookController;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.repository.BookRepository;
 import com.ll.library.boundedContext.checkout.service.CheckoutHistoryService;
@@ -26,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "api/v1/checkout", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1CheckoutController", description = "책 대출 ")
-public class CheckoutHistoryController {
+public class ApiV1CheckoutHistoryController {
     private final CheckoutHistoryService checkoutHistoryService;
     private final BookRepository bookRepository;
     private final Rq rq;

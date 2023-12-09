@@ -1,21 +1,20 @@
 package com.ll.library.boundedContext.member.controller;
 
+
 import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
+import com.ll.library.boundedContext.member.dto.request.JoinRequest;
+import com.ll.library.boundedContext.member.dto.request.LoginRequest;
+import com.ll.library.boundedContext.member.dto.response.LoginResponse;
+import com.ll.library.boundedContext.member.dto.response.MemberResponse;
 import com.ll.library.boundedContext.member.entity.Member;
 import com.ll.library.boundedContext.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.ALL_VALUE;
@@ -28,21 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1MemberController {
 
     private final MemberService memberService;
-    private final Rq rq;
-
-    @Data
-    public static class LoginRequest {
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String password;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class LoginResponse {
-        private final String accessToken;
-    }
+    private  final Rq rq;
 
     @PostMapping("/login")
     @Operation(summary = "로그인, 엑세스 토큰 발급")
@@ -65,25 +50,10 @@ public class ApiV1MemberController {
         );
     }
 
-    @Data
-    public static class JoinRequest {
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String password;
-        @NotBlank
-        private String email;
 
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class JoinResponse {
-        private final Member member;
-    }
 
     @PostMapping("/join")
-    public RsData<JoinResponse> join(@Valid @RequestBody JoinRequest joinRequest) {
+    public RsData<MemberResponse> join(@Valid @RequestBody JoinRequest joinRequest) {
         RsData<Member> joinRs = memberService.join(joinRequest.getUsername(), joinRequest.getPassword(), joinRequest.getEmail());
 
         if (joinRs.isFail()) {
@@ -93,30 +63,22 @@ public class ApiV1MemberController {
         return RsData.of(
                 "S-1",
                 "회원가입 완료.",
-                new JoinResponse(joinRs.getData())
+                new MemberResponse(joinRs.getData())
         );
     }
 
 
 
-
-
-    @AllArgsConstructor
-    @Getter
-    public static class MeResponse {
-        private final Member member;
-    }
-
     // consumes = ALL_VALUE => 나는 딱히 JSON 을 입력받기를 고집하지 않겠다.
     @GetMapping(value = "/me", consumes = ALL_VALUE)
     @Operation(summary = "로그인된 사용자의 정보", security = @SecurityRequirement(name = "bearerAuth"))
-    public RsData<MeResponse> me(@AuthenticationPrincipal User user) {
-        Member member = memberService.findByUsername(user.getUsername()).get();
+    public RsData<MemberResponse> me() {
+        Member member = memberService.findByUsername(rq.getMember().getUsername()).get();
 
         return RsData.of(
                 "S-1",
                 "성공",
-                new MeResponse(member)
+                new MemberResponse(member)
         );
     }
 

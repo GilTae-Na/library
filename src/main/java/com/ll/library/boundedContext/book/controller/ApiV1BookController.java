@@ -2,6 +2,8 @@ package com.ll.library.boundedContext.book.controller;
 
 import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
+import com.ll.library.boundedContext.book.dto.BookRequest;
+import com.ll.library.boundedContext.book.dto.BookResponse;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.service.BookService;
 import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
@@ -27,7 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "api/v1/book", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1BookController", description = "로그인, 로그인 된 회원의 정보")
-public class BookController {
+public class ApiV1BookController {
 
     @Autowired
     private final BookService bookService;
@@ -36,25 +38,11 @@ public class BookController {
 
     //-------------------------------등록----------
 
-    @Data
-    public static class RegisterRequest {
-        @NotBlank
-        private String title; //제목
-        @NotBlank
-        private String author;//저자
-        @NotBlank
-        private String introduce; //책 설명
-    }
 
-    @AllArgsConstructor
-    @Getter
-    public static class RegisterResponse {
-        private final Book book;
-    }
 
     @PostMapping(value = "", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "등록", security = @SecurityRequirement(name = "bearerAuth"))
-    public RsData create(@Valid @RequestBody RegisterRequest registerRequest) {
+    public RsData create(@Valid @RequestBody BookRequest registerRequest) {
         Member member = rq.getMember();
 
         RsData<Book> rsBook =  bookService.create(
@@ -68,34 +56,18 @@ public class BookController {
         return RsData.of(
                 rsBook.getResultCode(),
                 rsBook.getMsg(),
-                new RegisterResponse(rsBook.getData())
+                new BookResponse(rsBook.getData())
         );
     }
 
 
 //-------------------------------수정----------
 
-    @Data
-    public static class ModifyRequest {
-        @NotBlank
-        private String title; //제목
-        @NotBlank
-        private String author;//저자
-        @NotBlank
-        private String introduce; //책 설명
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class ModifyResponse {
-        private final Book book;
-    }
-
 
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "수정", security = @SecurityRequirement(name = "bearerAuth"))
-    public RsData<ModifyResponse> modify(
-            @Valid @RequestBody ModifyRequest modifyRequest,
+    public RsData<BookResponse> modify(
+            @Valid @RequestBody BookRequest modifyRequest,
             @PathVariable Long id
     ) {
         Member member = rq.getMember();
@@ -117,7 +89,7 @@ public class BookController {
         return RsData.of(
                 modifyRs.getResultCode(),
                 modifyRs.getMsg(),
-                new ModifyResponse(modifyRs.getData())
+                new BookResponse(modifyRs.getData())
         );
 
     }

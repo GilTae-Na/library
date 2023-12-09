@@ -1,18 +1,17 @@
 package com.ll.library.boundedContext.book.service;
 
 import com.ll.library.base.rsData.RsData;
-import com.ll.library.boundedContext.book.controller.BookController;
+
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.repository.BookRepository;
-import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
-import com.ll.library.boundedContext.checkout.repository.CheckoutHistoryRepository;
+
 import com.ll.library.boundedContext.member.entity.Member;
-import com.ll.library.boundedContext.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
 import java.util.Objects;
 import java.util.Optional;
 
