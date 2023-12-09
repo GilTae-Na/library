@@ -7,17 +7,11 @@ import com.ll.library.boundedContext.book.dto.BookRequest;
 import com.ll.library.boundedContext.book.dto.BookResponse;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.service.BookService;
-import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
 import com.ll.library.boundedContext.member.entity.Member;
-import com.ll.library.boundedContext.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +32,6 @@ public class ApiV1BookController {
 
 
     //-------------------------------등록----------
-
-
 
     @PostMapping(value = "", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "등록", security = @SecurityRequirement(name = "bearerAuth"))

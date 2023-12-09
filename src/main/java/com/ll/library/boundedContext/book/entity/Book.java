@@ -1,17 +1,10 @@
 package com.ll.library.boundedContext.book.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.library.base.entity.BaseEntity;
-import com.ll.library.boundedContext.checkout.entity.CheckoutHistory;
 import com.ll.library.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter

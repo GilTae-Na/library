@@ -4,6 +4,8 @@ import com.ll.library.base.rq.Rq;
 import com.ll.library.base.rsData.RsData;
 import com.ll.library.boundedContext.book.entity.Book;
 import com.ll.library.boundedContext.book.repository.BookRepository;
+import com.ll.library.boundedContext.checkout.dto.CheckoutRequest;
+import com.ll.library.boundedContext.checkout.dto.CheckoutResponse;
 import com.ll.library.boundedContext.checkout.service.CheckoutHistoryService;
 import com.ll.library.boundedContext.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,25 +33,14 @@ public class ApiV1CheckoutHistoryController {
     private final Rq rq;
 
 
-    //-----------------------대출확인--------------
-    @Data //리퀘스트, 리스폰 위치 정리
-    public static class CheckoutRequest {
-        @NotBlank
-        private String title; //제목
-    }
 
-    @AllArgsConstructor
-    @Getter
-    public static class CheckoutResponse {
-        private final Book book;
-    }
 
     @PostMapping(value = "/checkout-history", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "대출이력을 확인, 로그인 안해도 확인 가능")
     public RsData confirmCheckout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
-        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title); //서비스로 로직 이전하기
+        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.getTitle()); //서비스로 로직 이전하기
         if(book.isEmpty()){
-            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
+            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.getTitle()), null);
         }
 
         return checkoutHistoryService.CheckoutHistory(book.get());
@@ -61,10 +52,10 @@ public class ApiV1CheckoutHistoryController {
     @Operation(summary = "대출하기, 로그인한 사용자만", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData Checkout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
         Member member = rq.getMember();
-        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title);
+        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.getTitle());
 
         if(book.isEmpty()){
-            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
+            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.getTitle()), null);
         }
 
         if(checkoutHistoryService.CheckoutHistory(book.get()).isFail()){
@@ -84,10 +75,10 @@ public class ApiV1CheckoutHistoryController {
     @PostMapping(value = "/return", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "반납", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData return_book(@Valid @RequestBody CheckoutRequest checkoutRequest) {
-        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.title);
+        Optional<Book> book = bookRepository.findByTitle(checkoutRequest.getTitle());
 
         if(book.isEmpty()){
-            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.title), null);
+            return RsData.of("F-1", "%s 책은 없습니다.".formatted(checkoutRequest.getTitle()), null);
         }
 
         RsData rsBook =  checkoutHistoryService.updateReturnDate(book.get());
